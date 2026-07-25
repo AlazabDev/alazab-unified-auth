@@ -15,6 +15,10 @@ import VerifyPage from "./pages/auth/VerifyPage.tsx";
 import SuccessPage from "./pages/auth/SuccessPage.tsx";
 import SettingsPage from "./pages/auth/SettingsPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
+import AdminLayout from "./pages/admin/AdminLayout.tsx";
+import AdminOverviewPage from "./pages/admin/AdminOverviewPage.tsx";
+import AuthAdminPage from "./pages/admin/AuthAdminPage.tsx";
+import WebhooksAdminPage from "./pages/admin/WebhooksAdminPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -37,6 +41,11 @@ const App = () => (
               <Route path="/auth/success" element={<SuccessPage />} />
               <Route path="/auth/settings" element={<SettingsPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminOverviewPage />} />
+                <Route path="auth" element={<AuthAdminPage />} />
+                <Route path="webhooks" element={<WebhooksAdminPage />} />
+              </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
