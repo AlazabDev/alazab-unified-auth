@@ -32,6 +32,9 @@ type Provider = {
   status: string;
   last_checked_at: string | null;
   notes: string | null;
+  pre_auth_redirect_url: string | null;
+  post_auth_redirect_url: string | null;
+  scopes: string | null;
 };
 
 type FormState = {
@@ -43,11 +46,15 @@ type FormState = {
   client_id: string;
   client_secret: string;
   notes: string;
+  pre_auth_redirect_url: string;
+  post_auth_redirect_url: string;
+  scopes: string;
 };
 
 const emptyForm: FormState = {
   key: "", label: "", type: "oauth", enabled: false,
   client_id: "", client_secret: "", notes: "",
+  pre_auth_redirect_url: "", post_auth_redirect_url: "", scopes: "",
 };
 
 const statusMeta = (s: string) => {
