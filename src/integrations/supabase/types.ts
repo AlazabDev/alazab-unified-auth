@@ -104,6 +104,54 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_providers: {
+        Row: {
+          client_id: string | null
+          client_secret: string | null
+          created_at: string
+          enabled: boolean
+          extra: Json
+          id: string
+          key: string
+          label: string
+          last_checked_at: string | null
+          notes: string | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          client_secret?: string | null
+          created_at?: string
+          enabled?: boolean
+          extra?: Json
+          id?: string
+          key: string
+          label: string
+          last_checked_at?: string | null
+          notes?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          client_secret?: string | null
+          created_at?: string
+          enabled?: boolean
+          extra?: Json
+          id?: string
+          key?: string
+          label?: string
+          last_checked_at?: string | null
+          notes?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       branches: {
         Row: {
           company_id: string | null
