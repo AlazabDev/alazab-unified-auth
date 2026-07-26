@@ -306,6 +306,35 @@ const AuthAdminPage = () => {
               <Input type="password" value={form.client_secret} onChange={(e) => setForm({ ...form, client_secret: e.target.value })} />
             </div>
             <div className="space-y-1.5">
+              <Label>رابط ما قبل المصادقة (Pre-Auth URL)</Label>
+              <Input
+                dir="ltr"
+                placeholder="https://auth.alazab.com/auth/login"
+                value={form.pre_auth_redirect_url}
+                onChange={(e) => setForm({ ...form, pre_auth_redirect_url: e.target.value })}
+              />
+              <p className="text-[11px] text-muted-foreground">وجهة توجيه المستخدم قبل بدء تدفّق تسجيل الدخول.</p>
+            </div>
+            <div className="space-y-1.5">
+              <Label>رابط ما بعد المصادقة (Post-Auth URL)</Label>
+              <Input
+                dir="ltr"
+                placeholder="https://auth.alazab.com/dashboard"
+                value={form.post_auth_redirect_url}
+                onChange={(e) => setForm({ ...form, post_auth_redirect_url: e.target.value })}
+              />
+              <p className="text-[11px] text-muted-foreground">وجهة إعادة التوجيه بعد نجاح المصادقة.</p>
+            </div>
+            <div className="space-y-1.5">
+              <Label>النطاقات (Scopes)</Label>
+              <Input
+                dir="ltr"
+                placeholder="openid email profile"
+                value={form.scopes}
+                onChange={(e) => setForm({ ...form, scopes: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
               <Label>ملاحظات</Label>
               <Textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             </div>
