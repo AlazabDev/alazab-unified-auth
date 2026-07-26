@@ -97,6 +97,9 @@ const AuthAdminPage = () => {
     setForm({
       id: p.id, key: p.key, label: p.label, type: p.type, enabled: p.enabled,
       client_id: p.client_id ?? "", client_secret: p.client_secret ?? "", notes: p.notes ?? "",
+      pre_auth_redirect_url: p.pre_auth_redirect_url ?? "",
+      post_auth_redirect_url: p.post_auth_redirect_url ?? "",
+      scopes: p.scopes ?? "",
     });
     setDialogOpen(true);
   };
