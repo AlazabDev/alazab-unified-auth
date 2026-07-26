@@ -32,6 +32,9 @@ type Provider = {
   status: string;
   last_checked_at: string | null;
   notes: string | null;
+  pre_auth_redirect_url: string | null;
+  post_auth_redirect_url: string | null;
+  scopes: string | null;
 };
 
 type FormState = {
@@ -43,11 +46,15 @@ type FormState = {
   client_id: string;
   client_secret: string;
   notes: string;
+  pre_auth_redirect_url: string;
+  post_auth_redirect_url: string;
+  scopes: string;
 };
 
 const emptyForm: FormState = {
   key: "", label: "", type: "oauth", enabled: false,
   client_id: "", client_secret: "", notes: "",
+  pre_auth_redirect_url: "", post_auth_redirect_url: "", scopes: "",
 };
 
 const statusMeta = (s: string) => {
@@ -90,6 +97,9 @@ const AuthAdminPage = () => {
     setForm({
       id: p.id, key: p.key, label: p.label, type: p.type, enabled: p.enabled,
       client_id: p.client_id ?? "", client_secret: p.client_secret ?? "", notes: p.notes ?? "",
+      pre_auth_redirect_url: p.pre_auth_redirect_url ?? "",
+      post_auth_redirect_url: p.post_auth_redirect_url ?? "",
+      scopes: p.scopes ?? "",
     });
     setDialogOpen(true);
   };
@@ -104,6 +114,9 @@ const AuthAdminPage = () => {
       key: form.key.trim(), label: form.label.trim(), type: form.type, enabled: form.enabled,
       client_id: form.client_id || null, client_secret: form.client_secret || null,
       notes: form.notes || null,
+      pre_auth_redirect_url: form.pre_auth_redirect_url.trim() || null,
+      post_auth_redirect_url: form.post_auth_redirect_url.trim() || null,
+      scopes: form.scopes.trim() || null,
     };
     const q = form.id
       ? supabase.from("auth_providers").update(payload).eq("id", form.id)
@@ -291,6 +304,35 @@ const AuthAdminPage = () => {
             <div className="space-y-1.5">
               <Label>Client Secret</Label>
               <Input type="password" value={form.client_secret} onChange={(e) => setForm({ ...form, client_secret: e.target.value })} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>رابط ما قبل المصادقة (Pre-Auth URL)</Label>
+              <Input
+                dir="ltr"
+                placeholder="https://auth.alazab.com/auth/login"
+                value={form.pre_auth_redirect_url}
+                onChange={(e) => setForm({ ...form, pre_auth_redirect_url: e.target.value })}
+              />
+              <p className="text-[11px] text-muted-foreground">وجهة توجيه المستخدم قبل بدء تدفّق تسجيل الدخول.</p>
+            </div>
+            <div className="space-y-1.5">
+              <Label>رابط ما بعد المصادقة (Post-Auth URL)</Label>
+              <Input
+                dir="ltr"
+                placeholder="https://auth.alazab.com/dashboard"
+                value={form.post_auth_redirect_url}
+                onChange={(e) => setForm({ ...form, post_auth_redirect_url: e.target.value })}
+              />
+              <p className="text-[11px] text-muted-foreground">وجهة إعادة التوجيه بعد نجاح المصادقة.</p>
+            </div>
+            <div className="space-y-1.5">
+              <Label>النطاقات (Scopes)</Label>
+              <Input
+                dir="ltr"
+                placeholder="openid email profile"
+                value={form.scopes}
+                onChange={(e) => setForm({ ...form, scopes: e.target.value })}
+              />
             </div>
             <div className="space-y-1.5">
               <Label>ملاحظات</Label>
