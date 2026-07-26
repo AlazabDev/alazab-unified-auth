@@ -114,6 +114,9 @@ const AuthAdminPage = () => {
       key: form.key.trim(), label: form.label.trim(), type: form.type, enabled: form.enabled,
       client_id: form.client_id || null, client_secret: form.client_secret || null,
       notes: form.notes || null,
+      pre_auth_redirect_url: form.pre_auth_redirect_url.trim() || null,
+      post_auth_redirect_url: form.post_auth_redirect_url.trim() || null,
+      scopes: form.scopes.trim() || null,
     };
     const q = form.id
       ? supabase.from("auth_providers").update(payload).eq("id", form.id)
