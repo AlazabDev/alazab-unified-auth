@@ -116,6 +116,9 @@ export type Database = {
           label: string
           last_checked_at: string | null
           notes: string | null
+          post_auth_redirect_url: string | null
+          pre_auth_redirect_url: string | null
+          scopes: string | null
           status: string
           type: string
           updated_at: string
@@ -131,6 +134,9 @@ export type Database = {
           label: string
           last_checked_at?: string | null
           notes?: string | null
+          post_auth_redirect_url?: string | null
+          pre_auth_redirect_url?: string | null
+          scopes?: string | null
           status?: string
           type?: string
           updated_at?: string
@@ -146,6 +152,9 @@ export type Database = {
           label?: string
           last_checked_at?: string | null
           notes?: string | null
+          post_auth_redirect_url?: string | null
+          pre_auth_redirect_url?: string | null
+          scopes?: string | null
           status?: string
           type?: string
           updated_at?: string
