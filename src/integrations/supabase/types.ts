@@ -52,31 +52,151 @@ export type Database = {
       }
       ai_settings: {
         Row: {
-          api_key: string | null
+          a2a_endpoint: string | null
+          a2a_model: string | null
+          ai_services_endpoint: string | null
           api_version: string | null
+          auth_agent: string | null
+          azure_openai_endpoint: string | null
+          connection_status: string | null
+          copilot_agent: string | null
+          core_agent: string | null
+          core_model: string | null
+          default_agent: string | null
+          default_deployment: string | null
           deployment: string | null
+          embedding_model: string | null
+          enabled: boolean
           endpoint: string | null
+          environment: string | null
+          finance_agent: string | null
+          finance_model: string | null
+          foundry_endpoint: string | null
+          foundry_secret_name: string | null
+          gpt_model: string | null
           id: number
+          last_connection_check: string | null
+          last_connection_error: string | null
+          maint_agent: string | null
+          maint_model: string | null
+          openai_secret_name: string | null
+          payments_agent: string | null
+          production_agent: string | null
+          project_agent: string | null
+          project_endpoint: string | null
+          provider: string | null
+          speech_secret_name: string | null
+          speech_to_text_endpoint: string | null
+          speech_to_text_model: string | null
           system_prompt: string | null
+          text_to_speech_endpoint: string | null
+          translator_endpoint: string | null
+          translator_secret_name: string | null
           updated_at: string
+          vision_agent: string | null
+          vision_endpoint: string | null
+          vision_region: string | null
+          vision_resource: string | null
+          vision_secret_name: string | null
+          voice_live_model: string | null
         }
         Insert: {
-          api_key?: string | null
+          a2a_endpoint?: string | null
+          a2a_model?: string | null
+          ai_services_endpoint?: string | null
           api_version?: string | null
+          auth_agent?: string | null
+          azure_openai_endpoint?: string | null
+          connection_status?: string | null
+          copilot_agent?: string | null
+          core_agent?: string | null
+          core_model?: string | null
+          default_agent?: string | null
+          default_deployment?: string | null
           deployment?: string | null
+          embedding_model?: string | null
+          enabled?: boolean
           endpoint?: string | null
+          environment?: string | null
+          finance_agent?: string | null
+          finance_model?: string | null
+          foundry_endpoint?: string | null
+          foundry_secret_name?: string | null
+          gpt_model?: string | null
           id?: number
+          last_connection_check?: string | null
+          last_connection_error?: string | null
+          maint_agent?: string | null
+          maint_model?: string | null
+          openai_secret_name?: string | null
+          payments_agent?: string | null
+          production_agent?: string | null
+          project_agent?: string | null
+          project_endpoint?: string | null
+          provider?: string | null
+          speech_secret_name?: string | null
+          speech_to_text_endpoint?: string | null
+          speech_to_text_model?: string | null
           system_prompt?: string | null
+          text_to_speech_endpoint?: string | null
+          translator_endpoint?: string | null
+          translator_secret_name?: string | null
           updated_at?: string
+          vision_agent?: string | null
+          vision_endpoint?: string | null
+          vision_region?: string | null
+          vision_resource?: string | null
+          vision_secret_name?: string | null
+          voice_live_model?: string | null
         }
         Update: {
-          api_key?: string | null
+          a2a_endpoint?: string | null
+          a2a_model?: string | null
+          ai_services_endpoint?: string | null
           api_version?: string | null
+          auth_agent?: string | null
+          azure_openai_endpoint?: string | null
+          connection_status?: string | null
+          copilot_agent?: string | null
+          core_agent?: string | null
+          core_model?: string | null
+          default_agent?: string | null
+          default_deployment?: string | null
           deployment?: string | null
+          embedding_model?: string | null
+          enabled?: boolean
           endpoint?: string | null
+          environment?: string | null
+          finance_agent?: string | null
+          finance_model?: string | null
+          foundry_endpoint?: string | null
+          foundry_secret_name?: string | null
+          gpt_model?: string | null
           id?: number
+          last_connection_check?: string | null
+          last_connection_error?: string | null
+          maint_agent?: string | null
+          maint_model?: string | null
+          openai_secret_name?: string | null
+          payments_agent?: string | null
+          production_agent?: string | null
+          project_agent?: string | null
+          project_endpoint?: string | null
+          provider?: string | null
+          speech_secret_name?: string | null
+          speech_to_text_endpoint?: string | null
+          speech_to_text_model?: string | null
           system_prompt?: string | null
+          text_to_speech_endpoint?: string | null
+          translator_endpoint?: string | null
+          translator_secret_name?: string | null
           updated_at?: string
+          vision_agent?: string | null
+          vision_endpoint?: string | null
+          vision_region?: string | null
+          vision_resource?: string | null
+          vision_secret_name?: string | null
+          voice_live_model?: string | null
         }
         Relationships: []
       }
