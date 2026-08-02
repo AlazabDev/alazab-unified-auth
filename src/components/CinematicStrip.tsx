@@ -43,25 +43,30 @@ const CinematicStrip = () => {
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
 
-        <div className="flex items-center animate-scroll-strip w-max">
-          {doubled.map((brand, i) => (
-            <a
-              key={`${brand.name}-${i}`}
-              href={brand.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 mx-10 md:mx-14"
-              aria-label={brand.name}
-            >
-              <img
-                src={brand.logo}
-                alt={brand.name}
-                className="h-24 md:h-28 w-auto object-contain"
-                loading="lazy"
-              />
-            </a>
+        <div className="flex items-center animate-scroll-strip w-max" dir="ltr">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center shrink-0" aria-hidden={copy === 1}>
+              {group.map((brand, i) => (
+                <a
+                  key={`${brand.name}-${copy}-${i}`}
+                  href={brand.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0 mx-7 md:mx-10 opacity-90 hover:opacity-100 transition-opacity"
+                  aria-label={brand.name}
+                >
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="h-16 md:h-20 w-auto object-contain"
+                    loading="lazy"
+                  />
+                </a>
+              ))}
+            </div>
           ))}
         </div>
+
       </div>
     </section>
   );
