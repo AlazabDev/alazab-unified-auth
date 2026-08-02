@@ -14,6 +14,8 @@ import CheckEmailPage from "./pages/auth/CheckEmailPage.tsx";
 import VerifyPage from "./pages/auth/VerifyPage.tsx";
 import SuccessPage from "./pages/auth/SuccessPage.tsx";
 import SettingsPage from "./pages/auth/SettingsPage.tsx";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.tsx";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
 import AdminLayout from "./pages/admin/AdminLayout.tsx";
 import AdminOverviewPage from "./pages/admin/AdminOverviewPage.tsx";
@@ -41,7 +43,12 @@ const App = () => (
               <Route path="/auth/success" element={<SuccessPage />} />
               <Route path="/auth/settings" element={<SettingsPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin" element={<AdminLayout />}>
+
                 <Route index element={<AdminOverviewPage />} />
                 <Route path="auth" element={<AuthAdminPage />} />
                 <Route path="webhooks" element={<WebhooksAdminPage />} />

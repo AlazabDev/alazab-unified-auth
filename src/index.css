@@ -211,7 +211,11 @@
 }
 
 .animate-scroll-strip {
-  animation: scroll-strip 30s linear infinite;
+  animation: scroll-strip 55s linear infinite;
+  will-change: transform;
+}
+.animate-scroll-strip:hover {
+  animation-play-state: paused;
 }
 
 /* Floating animation */
