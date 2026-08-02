@@ -161,9 +161,27 @@ Deno.serve(async (req) => {
     }
 
     const data = await res.json()
-    const reply = extractText(data) || 'عذراً، لم أتمكن من المعالجة.'
+    let reply = extractText(data) || 'عذراً، لم أتمكن من المعالجة.'
+
+    // Tool call: agent requests sending a verification code
+    const call = reply.match(/<<SEND_OTP:(\{[\s\S]*?\})>>/)
+    if (call) {
+      const lastUser = [...messages].reverse().find((m: any) => m.role === 'user')?.content ?? ''
+      const lang: 'ar' | 'en' = /[\u0600-\u06FF]/.test(lastUser) ? 'ar' : 'en'
+      let email: unknown
+      try { email = JSON.parse(call[1])?.email } catch { email = undefined }
+
+      if (!isEmail(email)) {
+        reply = lang === 'ar'
+          ? 'من فضلك أرسل بريدًا إلكترونيًا صحيحًا لأرسل إليه رمز التحقق.'
+          : 'Please provide a valid email address so I can send the verification code.'
+      } else {
+        reply = (reply.replace(call[0], '').trim() + '\n\n' + await sendOtp(email, lang)).trim()
+      }
+    }
 
     return json({ reply, agent: AGENT_NAME })
+
   } catch (error) {
     console.error('AzaBot agent error:', error)
     return json({ error: 'An internal error occurred' }, 500)
