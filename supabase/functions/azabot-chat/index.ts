@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        agent_reference: { name: AGENT_NAME, version: AGENT_VERSION },
+        agent_reference: { type: 'agent_reference', name: AGENT_NAME, version: AGENT_VERSION },
         input,
         store: false,
       }),
