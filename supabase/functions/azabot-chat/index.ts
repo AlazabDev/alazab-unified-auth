@@ -130,11 +130,15 @@ Deno.serve(async (req) => {
       }
     }
 
-    const input = messages.map((m: { role: string; content: string }) => ({
-      type: 'message',
-      role: m.role === 'system' ? 'user' : m.role,
-      content: m.content,
-    }))
+    const input = [
+      { type: 'message', role: 'user', content: TOOL_SYSTEM_PROMPT },
+      ...messages.map((m: { role: string; content: string }) => ({
+        type: 'message',
+        role: m.role === 'system' ? 'user' : m.role,
+        content: m.content,
+      })),
+    ]
+
 
     const res = await fetch(`${FOUNDRY_ENDPOINT}/openai/v1/responses`, {
       method: 'POST',
