@@ -46,16 +46,22 @@ Deno.serve(async (req) => {
     return json({ error: 'Service unavailable' }, 500)
   }
 
-  // Require authenticated caller
+  // Public chatbot: authentication is optional. If a real user token is sent,
+  // we resolve the user for logging; anonymous visitors are allowed.
   const authHeader = req.headers.get('Authorization')
-  if (!authHeader?.startsWith('Bearer ')) return json({ error: 'Unauthorized' }, 401)
+  let userId: string | null = null
+  if (authHeader?.startsWith('Bearer ')) {
+    try {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      const token = authHeader.replace('Bearer ', '')
+      const { data: userData } = await supabase.auth.getUser(token)
+      userId = userData?.user?.id ?? null
+    } catch {
+      userId = null
+    }
+  }
+  console.log('azabot-chat caller:', userId ?? 'anonymous')
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: { headers: { Authorization: authHeader } },
-  })
-  const token = authHeader.replace('Bearer ', '')
-  const { data: userData, error: userError } = await supabase.auth.getUser(token)
-  if (userError || !userData?.user) return json({ error: 'Unauthorized' }, 401)
 
   try {
     const { messages } = await req.json()
