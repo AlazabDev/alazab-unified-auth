@@ -16,6 +16,52 @@ const AGENT_VERSION = '2'
 const MAX_MESSAGES = 40
 const MAX_CONTENT_LEN = 4000
 
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const REDIRECT_TO = 'https://auth.alazab.com/auth/verify'
+
+// Simple in-memory throttle (per isolate) to limit code-sending abuse
+const otpThrottle = new Map<string, number>()
+const OTP_COOLDOWN_MS = 60_000
+
+const TOOL_SYSTEM_PROMPT = `أنت وكيل مصادقة العزب (az-agent-auth).
+لديك أداة واحدة: إرسال رمز تحقق (OTP) إلى بريد المستخدم.
+عندما يطلب المستخدم رمز دخول/تحقق أو تسجيل الدخول:
+1) اطلب بريده الإلكتروني إن لم يذكره.
+2) عند توفر البريد، أخرج سطرًا وحيدًا بهذا الشكل بالضبط دون أي نص آخر:
+<<SEND_OTP:{"email":"user@example.com"}>>
+لا تخترع رمزًا أبدًا ولا تدّعِ معرفته؛ الرمز يصل إلى البريد فقط.`
+
+function isEmail(v: unknown): v is string {
+  return typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) && v.length <= 254
+}
+
+async function sendOtp(email: string, lang: 'ar' | 'en') {
+  const now = Date.now()
+  const last = otpThrottle.get(email) ?? 0
+  if (now - last < OTP_COOLDOWN_MS) {
+    return lang === 'ar'
+      ? '⏳ تم إرسال رمز لهذا البريد قبل قليل. انتظر دقيقة ثم أعد المحاولة.'
+      : '⏳ A code was just sent to this address. Please wait a minute and try again.'
+  }
+  otpThrottle.set(email, now)
+
+  const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+  const { error } = await admin.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: true, emailRedirectTo: REDIRECT_TO },
+  })
+  if (error) {
+    console.error('sendOtp error:', error.message)
+    return lang === 'ar'
+      ? '⚠️ تعذّر إرسال الرمز الآن. تأكد من صحة البريد وحاول لاحقًا.'
+      : '⚠️ Could not send the code right now. Check the email and try later.'
+  }
+  return lang === 'ar'
+    ? `✅ أرسلت رمز تحقق مكوّن من 6 أرقام إلى **${email}**.\n\nافتح بريدك وأدخل الرمز في صفحة التحقق — صلاحيته 60 دقيقة.\n\n🔐 لأسباب أمنية لا يمكن عرض الرمز هنا في الدردشة، يصل إلى بريدك فقط.`
+    : `✅ I've sent a 6-digit verification code to **${email}**.\n\nOpen your inbox and enter it on the verification page — valid for 60 minutes.\n\n🔐 For security the code is never shown in chat; it only goes to your inbox.`
+}
+
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
