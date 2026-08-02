@@ -14,6 +14,8 @@ import CheckEmailPage from "./pages/auth/CheckEmailPage.tsx";
 import VerifyPage from "./pages/auth/VerifyPage.tsx";
 import SuccessPage from "./pages/auth/SuccessPage.tsx";
 import SettingsPage from "./pages/auth/SettingsPage.tsx";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.tsx";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
 import AdminLayout from "./pages/admin/AdminLayout.tsx";
 import AdminOverviewPage from "./pages/admin/AdminOverviewPage.tsx";
