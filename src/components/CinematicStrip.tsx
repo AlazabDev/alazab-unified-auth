@@ -12,7 +12,8 @@ const brands = [
 
 const CinematicStrip = () => {
   const { lang } = useLanguage();
-  const doubled = [...brands, ...brands];
+  const group = [...brands, ...brands];
+
 
   const title = lang === "ar" ? "علاماتنا التجارية" : "Our Brands";
   const subtitle =
