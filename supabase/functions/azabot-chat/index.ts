@@ -16,6 +16,52 @@ const AGENT_VERSION = '2'
 const MAX_MESSAGES = 40
 const MAX_CONTENT_LEN = 4000
 
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const REDIRECT_TO = 'https://auth.alazab.com/auth/verify'
+
+// Simple in-memory throttle (per isolate) to limit code-sending abuse
+const otpThrottle = new Map<string, number>()
+const OTP_COOLDOWN_MS = 60_000
+
+const TOOL_SYSTEM_PROMPT = `أنت وكيل مصادقة العزب (az-agent-auth).
+لديك أداة واحدة: إرسال رمز تحقق (OTP) إلى بريد المستخدم.
+عندما يطلب المستخدم رمز دخول/تحقق أو تسجيل الدخول:
+1) اطلب بريده الإلكتروني إن لم يذكره.
+2) عند توفر البريد، أخرج سطرًا وحيدًا بهذا الشكل بالضبط دون أي نص آخر:
+<<SEND_OTP:{"email":"user@example.com"}>>
+لا تخترع رمزًا أبدًا ولا تدّعِ معرفته؛ الرمز يصل إلى البريد فقط.`
+
+function isEmail(v: unknown): v is string {
+  return typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) && v.length <= 254
+}
+
+async function sendOtp(email: string, lang: 'ar' | 'en') {
+  const now = Date.now()
+  const last = otpThrottle.get(email) ?? 0
+  if (now - last < OTP_COOLDOWN_MS) {
+    return lang === 'ar'
+      ? '⏳ تم إرسال رمز لهذا البريد قبل قليل. انتظر دقيقة ثم أعد المحاولة.'
+      : '⏳ A code was just sent to this address. Please wait a minute and try again.'
+  }
+  otpThrottle.set(email, now)
+
+  const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+  const { error } = await admin.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: true, emailRedirectTo: REDIRECT_TO },
+  })
+  if (error) {
+    console.error('sendOtp error:', error.message)
+    return lang === 'ar'
+      ? '⚠️ تعذّر إرسال الرمز الآن. تأكد من صحة البريد وحاول لاحقًا.'
+      : '⚠️ Could not send the code right now. Check the email and try later.'
+  }
+  return lang === 'ar'
+    ? `✅ أرسلت رمز تحقق مكوّن من 6 أرقام إلى **${email}**.\n\nافتح بريدك وأدخل الرمز في صفحة التحقق — صلاحيته 60 دقيقة.\n\n🔐 لأسباب أمنية لا يمكن عرض الرمز هنا في الدردشة، يصل إلى بريدك فقط.`
+    : `✅ I've sent a 6-digit verification code to **${email}**.\n\nOpen your inbox and enter it on the verification page — valid for 60 minutes.\n\n🔐 For security the code is never shown in chat; it only goes to your inbox.`
+}
+
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -84,11 +130,15 @@ Deno.serve(async (req) => {
       }
     }
 
-    const input = messages.map((m: { role: string; content: string }) => ({
-      type: 'message',
-      role: m.role === 'system' ? 'user' : m.role,
-      content: m.content,
-    }))
+    const input = [
+      { type: 'message', role: 'user', content: TOOL_SYSTEM_PROMPT },
+      ...messages.map((m: { role: string; content: string }) => ({
+        type: 'message',
+        role: m.role === 'system' ? 'user' : m.role,
+        content: m.content,
+      })),
+    ]
+
 
     const res = await fetch(`${FOUNDRY_ENDPOINT}/openai/v1/responses`, {
       method: 'POST',
@@ -111,9 +161,27 @@ Deno.serve(async (req) => {
     }
 
     const data = await res.json()
-    const reply = extractText(data) || 'عذراً، لم أتمكن من المعالجة.'
+    let reply = extractText(data) || 'عذراً، لم أتمكن من المعالجة.'
+
+    // Tool call: agent requests sending a verification code
+    const call = reply.match(/<<SEND_OTP:(\{[\s\S]*?\})>>/)
+    if (call) {
+      const lastUser = [...messages].reverse().find((m: any) => m.role === 'user')?.content ?? ''
+      const lang: 'ar' | 'en' = /[\u0600-\u06FF]/.test(lastUser) ? 'ar' : 'en'
+      let email: unknown
+      try { email = JSON.parse(call[1])?.email } catch { email = undefined }
+
+      if (!isEmail(email)) {
+        reply = lang === 'ar'
+          ? 'من فضلك أرسل بريدًا إلكترونيًا صحيحًا لأرسل إليه رمز التحقق.'
+          : 'Please provide a valid email address so I can send the verification code.'
+      } else {
+        reply = (reply.replace(call[0], '').trim() + '\n\n' + await sendOtp(email, lang)).trim()
+      }
+    }
 
     return json({ reply, agent: AGENT_NAME })
+
   } catch (error) {
     console.error('AzaBot agent error:', error)
     return json({ error: 'An internal error occurred' }, 500)
