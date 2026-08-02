@@ -346,7 +346,18 @@ const AuthLoginPage = () => {
                 </form>
               </TabsContent>
             </Tabs>
+
+            <div className="pt-5 mt-1 border-t border-border/50 text-center">
+              <a
+                href="/auth/forgot-password"
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                {t("auth.forgot") || "نسيت كلمة المرور؟"}
+              </a>
+            </div>
           </motion.div>
+
         </div>
       </div>
     </div>
