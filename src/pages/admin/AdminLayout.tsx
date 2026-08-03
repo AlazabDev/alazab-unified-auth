@@ -35,6 +35,7 @@ const AdminLayout = () => {
   const items = [
     { to: "/admin", icon: LayoutGrid, label: "نظرة عامة", end: true },
     { to: "/admin/auth", icon: Shield, label: "إعدادات المصادقة" },
+    { to: "/admin/apps", icon: Boxes, label: "ربط الأنظمة" },
     { to: "/admin/webhooks", icon: Webhook, label: "الهوكات (Webhooks)" },
   ];
 
