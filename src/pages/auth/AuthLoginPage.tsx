@@ -115,14 +115,14 @@ const AuthLoginPage = () => {
     setGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: `${window.location.origin}/auth/success`,
       });
       if (result.error) {
         toast.error("Google login failed");
         return;
       }
       if (result.redirected) return;
-      navigate("/dashboard");
+      navigate("/auth/success");
     } catch {
       toast.error("Google login failed");
     } finally {
