@@ -43,7 +43,20 @@ const AuthLoginPage = () => {
   const [phoneLoading, setPhoneLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [azureLoading, setAzureLoading] = useState(false);
+  const [targetApp, setTargetApp] = useState<string | null>(null);
   const Arrow = dir === "rtl" ? ArrowRight : ArrowLeft;
+
+  useEffect(() => {
+    captureSsoTarget(window.location.search);
+    const target = getSsoTarget();
+    if (!target) return;
+    fetchSsoApps()
+      .then((apps) => {
+        const app = resolveSsoApp(target, apps);
+        if (app) setTargetApp(app.name_ar);
+      })
+      .catch(() => undefined);
+  }, []);
 
   const handleAzureLogin = async () => {
     setAzureLoading(true);
@@ -51,7 +64,7 @@ const AuthLoginPage = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "azure",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/success`,
           scopes: "email openid profile",
         },
       });
