@@ -98,7 +98,7 @@ const SuccessPage = () => {
           transition={{ delay: 1.2 }}
           className="text-white/40 text-sm"
         >
-          {t("otp.success.redirect")} ({countdown})
+          {appName ? `جارٍ تحويلك إلى ${appName}` : t("otp.success.redirect")} ({countdown})
         </motion.p>
       </motion.div>
     </div>
