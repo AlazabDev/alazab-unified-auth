@@ -14,6 +14,8 @@ const DashboardPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<SupaUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [apps, setApps] = useState<SsoApp[]>([]);
+  const [launching, setLaunching] = useState<string | null>(null);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -28,13 +30,28 @@ const DashboardPage = () => {
       if (!session?.user) navigate("/auth/login");
     });
 
+    fetchSsoApps()
+      .then((list) => setApps(list.filter((a) => a.is_active)))
+      .catch(() => undefined);
+
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const handleLaunch = async (app: SsoApp) => {
+    setLaunching(app.id);
+    try {
+      const url = await buildHandoffUrl(app);
+      window.location.href = url;
+    } finally {
+      setLaunching(null);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/auth/login");
   };
+
 
   if (loading) {
     return (
