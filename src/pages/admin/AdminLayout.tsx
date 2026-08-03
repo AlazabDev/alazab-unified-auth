@@ -1,6 +1,6 @@
 import { NavLink, Outlet, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Shield, Webhook, LayoutGrid, LogOut, ArrowLeft, ArrowRight } from "lucide-react";
+import { Shield, Webhook, LayoutGrid, LogOut, ArrowLeft, ArrowRight, Boxes } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
