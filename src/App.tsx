@@ -53,6 +53,7 @@ const App = () => (
                 <Route index element={<AdminOverviewPage />} />
                 <Route path="auth" element={<AuthAdminPage />} />
                 <Route path="webhooks" element={<WebhooksAdminPage />} />
+                <Route path="apps" element={<AppsAdminPage />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
