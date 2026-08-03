@@ -1711,6 +1711,63 @@ export type Database = {
         }
         Relationships: []
       }
+      sso_apps: {
+        Row: {
+          allowed_roles: string[]
+          base_url: string
+          color: string | null
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          id: string
+          is_active: boolean
+          is_default: boolean
+          logo_url: string | null
+          name_ar: string
+          name_en: string
+          redirect_url: string | null
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          allowed_roles?: string[]
+          base_url: string
+          color?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          logo_url?: string | null
+          name_ar: string
+          name_en: string
+          redirect_url?: string | null
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          allowed_roles?: string[]
+          base_url?: string
+          color?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          logo_url?: string | null
+          name_ar?: string
+          name_en?: string
+          redirect_url?: string | null
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           branches_count: number | null
