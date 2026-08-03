@@ -219,6 +219,16 @@ const AuthLoginPage = () => {
               </motion.div>
               <h1 className="font-heading text-2xl font-extrabold text-foreground">{t("otp.login.title")}</h1>
               <p className="text-muted-foreground text-sm mt-2">{t("otp.login.subtitle")}</p>
+              {targetApp && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  تسجيل الدخول للمتابعة إلى {targetApp}
+                </motion.div>
+              )}
             </div>
 
             {/* Social row */}
