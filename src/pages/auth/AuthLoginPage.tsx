@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, ArrowLeft, ArrowRight, Shield, Loader2, Lock, Sparkles, Smartphone } from "lucide-react";
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { captureSsoTarget, fetchSsoApps, getSsoTarget, resolveSsoApp } from "@/lib/sso";
 import { toast } from "sonner";
 import logoDark from "@/assets/az-s.png.asset.json";
 import logoLight from "@/assets/az-w.png.asset.json";
@@ -42,7 +43,20 @@ const AuthLoginPage = () => {
   const [phoneLoading, setPhoneLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [azureLoading, setAzureLoading] = useState(false);
+  const [targetApp, setTargetApp] = useState<string | null>(null);
   const Arrow = dir === "rtl" ? ArrowRight : ArrowLeft;
+
+  useEffect(() => {
+    captureSsoTarget(window.location.search);
+    const target = getSsoTarget();
+    if (!target) return;
+    fetchSsoApps()
+      .then((apps) => {
+        const app = resolveSsoApp(target, apps);
+        if (app) setTargetApp(app.name_ar);
+      })
+      .catch(() => undefined);
+  }, []);
 
   const handleAzureLogin = async () => {
     setAzureLoading(true);
@@ -50,7 +64,7 @@ const AuthLoginPage = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "azure",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/success`,
           scopes: "email openid profile",
         },
       });
@@ -101,14 +115,14 @@ const AuthLoginPage = () => {
     setGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: `${window.location.origin}/auth/success`,
       });
       if (result.error) {
         toast.error("Google login failed");
         return;
       }
       if (result.redirected) return;
-      navigate("/dashboard");
+      navigate("/auth/success");
     } catch {
       toast.error("Google login failed");
     } finally {
@@ -205,6 +219,16 @@ const AuthLoginPage = () => {
               </motion.div>
               <h1 className="font-heading text-2xl font-extrabold text-foreground">{t("otp.login.title")}</h1>
               <p className="text-muted-foreground text-sm mt-2">{t("otp.login.subtitle")}</p>
+              {targetApp && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  تسجيل الدخول للمتابعة إلى {targetApp}
+                </motion.div>
+              )}
             </div>
 
             {/* Social row */}
