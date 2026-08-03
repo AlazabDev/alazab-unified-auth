@@ -3,25 +3,53 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildHandoffUrl, clearSsoTarget, fetchSsoApps, getSsoTarget, resolveSsoApp } from "@/lib/sso";
 
 const SuccessPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(3);
+  const [appName, setAppName] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+    let destination: string | null = null;
+
+    (async () => {
+      const target = getSsoTarget();
+      if (!target) return;
+      try {
+        const apps = await fetchSsoApps();
+        const app = resolveSsoApp(target, apps);
+        if (!app || cancelled) return;
+        setAppName(app.name_ar);
+        destination = await buildHandoffUrl(app);
+      } catch {
+        /* fall back to dashboard */
+      }
+    })();
+
     const timer = setInterval(() => {
       setCountdown((c) => {
         if (c <= 1) {
           clearInterval(timer);
-          navigate("/dashboard");
+          if (destination) {
+            clearSsoTarget();
+            window.location.replace(destination);
+          } else {
+            navigate("/dashboard");
+          }
           return 0;
         }
         return c - 1;
       });
     }, 1000);
-    return () => clearInterval(timer);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
   }, [navigate]);
+
 
   return (
     <div className="min-h-screen gradient-hero flex items-center justify-center relative">
