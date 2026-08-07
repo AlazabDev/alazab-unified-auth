@@ -17,9 +17,13 @@ const CheckEmailPage = () => {
   const Arrow = dir === "rtl" ? ArrowRight : ArrowLeft;
 
   const handleResend = async () => {
+    if (!email) return;
     setResending(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({ email });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/auth/success` },
+      });
       if (error) throw error;
       setResent(true);
       toast.success(t("otp.check.resent"));

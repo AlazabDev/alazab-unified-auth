@@ -22,11 +22,9 @@ const AzaBotWidget = () => {
       }
       try {
         const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/azabot-chat`;
-        const res = await fetch(url, {
-          method: "OPTIONS",
-          headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
-        });
-        if (!cancelled) setStatus(res.ok || res.status === 204 ? "online" : "offline");
+        // Simple GET (no custom headers) — no CORS preflight needed
+        const res = await fetch(url, { method: "GET" });
+        if (!cancelled) setStatus(res.ok ? "online" : "offline");
       } catch {
         if (!cancelled) setStatus("offline");
       }

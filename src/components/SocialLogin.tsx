@@ -1,31 +1,26 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const SocialLogin = () => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth/success` },
       });
-      if (result.error) {
-        toast.error("Google login failed");
-        return;
-      }
-      if (result.redirected) return;
-      navigate("/dashboard");
+      if (error) throw error;
+      // Browser is redirecting to Google — keep the loading state.
     } catch {
       toast.error("Google login failed");
-    } finally {
       setGoogleLoading(false);
     }
   };

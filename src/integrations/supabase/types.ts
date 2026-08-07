@@ -1080,6 +1080,276 @@ export type Database = {
         }
         Relationships: []
       }
+      pn_activity: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          details: Json
+          id: string
+          note_id: string | null
+          project_id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          note_id?: string | null
+          project_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          note_id?: string | null
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pn_activity_note_id_fkey"
+            columns: ["note_id"]
+            isOneToOne: false
+            referencedRelation: "pn_notes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pn_activity_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "pn_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pn_attachments: {
+        Row: {
+          bucket_id: string
+          created_at: string
+          file_name: string
+          file_size: number | null
+          id: string
+          mime_type: string | null
+          note_id: string
+          object_path: string
+          project_id: string
+        }
+        Insert: {
+          bucket_id?: string
+          created_at?: string
+          file_name: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          note_id: string
+          object_path: string
+          project_id: string
+        }
+        Update: {
+          bucket_id?: string
+          created_at?: string
+          file_name?: string
+          file_size?: number | null
+          id?: string
+          mime_type?: string | null
+          note_id?: string
+          object_path?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pn_attachments_note_fk"
+            columns: ["project_id", "note_id"]
+            isOneToOne: false
+            referencedRelation: "pn_notes"
+            referencedColumns: ["project_id", "id"]
+          },
+        ]
+      }
+      pn_comments: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          note_id: string
+          project_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          note_id: string
+          project_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          note_id?: string
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pn_comments_note_fk"
+            columns: ["project_id", "note_id"]
+            isOneToOne: false
+            referencedRelation: "pn_notes"
+            referencedColumns: ["project_id", "id"]
+          },
+        ]
+      }
+      pn_deletion_log: {
+        Row: {
+          actor_id: string | null
+          deleted_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          project_id: string | null
+          title: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          deleted_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          project_id?: string | null
+          title?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          deleted_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          project_id?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
+      pn_notes: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          position: number
+          project_id: string
+          section_id: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          position?: number
+          project_id: string
+          section_id?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          position?: number
+          project_id?: string
+          section_id?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pn_notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "pn_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pn_notes_section_fk"
+            columns: ["project_id", "section_id"]
+            isOneToOne: false
+            referencedRelation: "pn_sections"
+            referencedColumns: ["project_id", "id"]
+          },
+        ]
+      }
+      pn_projects: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pn_sections: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          position: number
+          project_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          position?: number
+          project_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          position?: number
+          project_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pn_sections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "pn_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           city: string | null
@@ -2727,6 +2997,32 @@ export type Database = {
         }[]
       }
       is_admin: { Args: never; Returns: boolean }
+      pn_set_note_status: {
+        Args: {
+          next_status: string
+          status_comment?: string
+          target_note_id: string
+        }
+        Returns: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          position: number
+          project_id: string
+          section_id: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "pn_notes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       project_note_current_role: {
         Args: { target_project_id: string }
         Returns: string

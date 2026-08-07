@@ -3,6 +3,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 }
 
 const FOUNDRY_API_KEY = Deno.env.get('FOUNDRY_API_KEY')
@@ -85,6 +86,11 @@ function extractText(data: any): string {
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
+  }
+
+  // Lightweight health check for the widget status indicator (no auth needed)
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    return json({ status: 'ok', agent: AGENT_NAME })
   }
 
   if (!FOUNDRY_API_KEY) {

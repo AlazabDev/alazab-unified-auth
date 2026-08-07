@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShieldCheck, ArrowLeft, ArrowRight, Loader2, RefreshCw } from "lucide-react";
@@ -13,21 +13,27 @@ const VerifyPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const email = searchParams.get("email") || "";
+  const phone = searchParams.get("phone") || "";
+  const target = email || phone;
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const Arrow = dir === "rtl" ? ArrowRight : ArrowLeft;
 
+  useEffect(() => {
+    if (!target) navigate("/auth/login", { replace: true });
+  }, [target, navigate]);
+
   const handleVerify = async () => {
-    if (otp.length !== 6) return;
+    if (otp.length !== 6 || !target) return;
     setLoading(true);
     setError(false);
     try {
-      const { error: verifyError } = await supabase.auth.verifyOtp({
-        email,
-        token: otp,
-        type: "email",
-      });
+      const { error: verifyError } = await supabase.auth.verifyOtp(
+        phone
+          ? { phone, token: otp, type: "sms" }
+          : { email, token: otp, type: "email" }
+      );
       if (verifyError) throw verifyError;
       navigate("/auth/success");
     } catch {
@@ -40,8 +46,13 @@ const VerifyPage = () => {
   };
 
   const handleResend = async () => {
+    if (!target) return;
     try {
-      const { error } = await supabase.auth.signInWithOtp({ email });
+      const { error } = await supabase.auth.signInWithOtp(
+        phone
+          ? { phone }
+          : { email, options: { emailRedirectTo: `${window.location.origin}/auth/success` } }
+      );
       if (error) throw error;
       toast.success(t("otp.check.resent"));
     } catch {
@@ -71,8 +82,8 @@ const VerifyPage = () => {
             <ShieldCheck className="w-8 h-8 text-primary" />
           </div>
           <h1 className="font-heading text-2xl font-bold text-foreground">{t("otp.verify.title")}</h1>
-          <p className="text-muted-foreground mt-2">{t("otp.verify.subtitle")}</p>
-          <p className="text-primary font-semibold mt-1" dir="ltr">{email}</p>
+          <p className="text-muted-foreground mt-2">{phone ? t("otp.verify.subtitle.phone") : t("otp.verify.subtitle")}</p>
+          <p className="text-primary font-semibold mt-1" dir="ltr">{target}</p>
         </div>
 
         {/* OTP Input */}

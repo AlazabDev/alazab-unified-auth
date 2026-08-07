@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+
 import { captureSsoTarget, fetchSsoApps, getSsoTarget, resolveSsoApp } from "@/lib/sso";
 import { toast } from "sonner";
 import logoDark from "@/assets/az-s.png.asset.json";
@@ -82,7 +82,10 @@ const AuthLoginPage = () => {
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: true },
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/auth/success`,
+        },
       });
       if (error) throw error;
       navigate(`/auth/check-email?email=${encodeURIComponent(email)}`);
@@ -114,18 +117,14 @@ const AuthLoginPage = () => {
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: `${window.location.origin}/auth/success`,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth/success` },
       });
-      if (result.error) {
-        toast.error("Google login failed");
-        return;
-      }
-      if (result.redirected) return;
-      navigate("/auth/success");
-    } catch {
-      toast.error("Google login failed");
-    } finally {
+      if (error) throw error;
+      // Browser is redirecting to Google — keep the loading state.
+    } catch (err: any) {
+      toast.error(err.message || "Google login failed");
       setGoogleLoading(false);
     }
   };
