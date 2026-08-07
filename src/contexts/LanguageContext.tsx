@@ -137,6 +137,13 @@ const translations: Record<Lang, Record<string, string>> = {
     "strength.medium": "متوسطة",
     "strength.good": "جيدة",
     "strength.strong": "قوية",
+    "auth.login.error": "بيانات الدخول غير صحيحة. تحقق من البريد وكلمة المرور.",
+    "auth.signup.error": "تعذر إنشاء الحساب. حاول مرة أخرى.",
+    "auth.signup.termsRequired": "يجب الموافقة على الشروط والأحكام أولاً",
+    "auth.signup.done.title": "تم إنشاء حسابك تقريبًا",
+    "auth.signup.done.subtitle": "أرسلنا رابط التأكيد إلى بريدك. افتحه لإكمال التسجيل ثم سجّل دخولك.",
+    "auth.otp.instead": "الدخول برمز تحقق بدون كلمة مرور",
+    "otp.verify.subtitle.phone": "لقد أرسلنا رمزًا إلى هاتفك",
 
     // OTP Auth Flow
     "otp.login.title": "تسجيل الدخول",
@@ -367,6 +374,13 @@ const translations: Record<Lang, Record<string, string>> = {
     "strength.medium": "Medium",
     "strength.good": "Good",
     "strength.strong": "Strong",
+    "auth.login.error": "Invalid credentials. Check your email and password.",
+    "auth.signup.error": "Could not create the account. Try again.",
+    "auth.signup.termsRequired": "You must accept the Terms & Conditions first",
+    "auth.signup.done.title": "Almost done",
+    "auth.signup.done.subtitle": "We sent a confirmation link to your email. Open it to finish signing up, then log in.",
+    "auth.otp.instead": "Sign in with a code instead",
+    "otp.verify.subtitle.phone": "We sent a code to your phone",
 
     // OTP Auth Flow
     "otp.login.title": "Login",
