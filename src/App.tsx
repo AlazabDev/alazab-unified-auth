@@ -14,6 +14,7 @@ import CheckEmailPage from "./pages/auth/CheckEmailPage.tsx";
 import VerifyPage from "./pages/auth/VerifyPage.tsx";
 import SuccessPage from "./pages/auth/SuccessPage.tsx";
 import SettingsPage from "./pages/auth/SettingsPage.tsx";
+import SecurityPage from "./pages/auth/SecurityPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.tsx";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage.tsx";
 import DashboardPage from "./pages/DashboardPage.tsx";
@@ -22,6 +23,7 @@ import AdminOverviewPage from "./pages/admin/AdminOverviewPage.tsx";
 import AuthAdminPage from "./pages/admin/AuthAdminPage.tsx";
 import WebhooksAdminPage from "./pages/admin/WebhooksAdminPage.tsx";
 import AppsAdminPage from "./pages/admin/AppsAdminPage.tsx";
+import AuditAdminPage from "./pages/admin/AuditAdminPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -43,6 +45,8 @@ const App = () => (
               <Route path="/auth/verify" element={<VerifyPage />} />
               <Route path="/auth/success" element={<SuccessPage />} />
               <Route path="/auth/settings" element={<SettingsPage />} />
+              <Route path="/auth/security" element={<SecurityPage />} />
+              <Route path="/auth/sessions" element={<SecurityPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
@@ -54,6 +58,7 @@ const App = () => (
                 <Route path="auth" element={<AuthAdminPage />} />
                 <Route path="webhooks" element={<WebhooksAdminPage />} />
                 <Route path="apps" element={<AppsAdminPage />} />
+                <Route path="audit" element={<AuditAdminPage />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
