@@ -11,7 +11,7 @@ const AdminOverviewPage = () => {
     (async () => {
       const [wh, users] = await Promise.all([
         supabase.from("webhook_endpoints").select("*", { count: "exact", head: true }),
-        supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabase.from("adp_profiles").select("*", { count: "exact", head: true }),
       ]);
       setStats({
         webhooks: wh.count ?? 0,
