@@ -7,6 +7,8 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logAuthEvent } from "@/lib/audit";
+import { markMfaVerified } from "@/lib/mfa";
 
 const VerifyPage = () => {
   const { t, dir } = useLanguage();
@@ -35,8 +37,13 @@ const VerifyPage = () => {
           : { email, token: otp, type: "email" }
       );
       if (verifyError) throw verifyError;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) await markMfaVerified(user.id);
+      await logAuthEvent({ event: "otp_verified", email: email || undefined, description: "One-time code verified" });
+      await logAuthEvent({ event: "login", email: email || undefined, description: "Signed in with one-time code" });
       navigate("/auth/success");
     } catch {
+      await logAuthEvent({ event: "otp_verified", status: "failure", email: email || undefined, description: "Invalid one-time code" });
       setError(true);
       setOtp("");
       toast.error(t("otp.verify.error"));
@@ -54,6 +61,7 @@ const VerifyPage = () => {
           : { email, options: { emailRedirectTo: `${window.location.origin}/auth/success` } }
       );
       if (error) throw error;
+      await logAuthEvent({ event: "otp_requested", email: email || undefined, description: "Code resent" });
       toast.success(t("otp.check.resent"));
     } catch {
       toast.error("Error resending code");
