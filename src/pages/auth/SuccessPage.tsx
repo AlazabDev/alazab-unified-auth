@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildHandoffUrl, clearSsoTarget, fetchSsoApps, getSsoTarget, resolveSsoApp } from "@/lib/sso";
+import { fetchMyRoles, canAccessApp } from "@/lib/rbac";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const SuccessPage = () => {
   const { t } = useLanguage();
@@ -22,6 +25,14 @@ const SuccessPage = () => {
         const apps = await fetchSsoApps();
         const app = resolveSsoApp(target, apps);
         if (!app || cancelled) return;
+        // RBAC: only hand off to apps this user is authorised for
+        const { data: { user } } = await supabase.auth.getUser();
+        const roles = user ? await fetchMyRoles(user.id) : [];
+        if (!canAccessApp(app, roles)) {
+          clearSsoTarget();
+          toast.error("ليس لديك صلاحية الوصول إلى هذا النظام");
+          return;
+        }
         setAppName(app.name_ar);
         destination = await buildHandoffUrl(app);
       } catch {
