@@ -44,7 +44,7 @@ const LoginPage = () => {
           options: { emailRedirectTo: `${window.location.origin}/auth/success` },
         });
         await logAuthEvent({ event: "otp_requested", email, description: "2FA step-up code sent after password sign-in" });
-        toast.success(t("auth.login.error") ? "" : "");
+        toast.success(t("otp.check.resent"));
         navigate(`/auth/verify?email=${encodeURIComponent(email)}&mfa=1`);
         return;
       }
