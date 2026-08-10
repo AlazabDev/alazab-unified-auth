@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { captureSsoTarget, fetchSsoApps, getSsoTarget, resolveSsoApp } from "@/lib/sso";
 import { toast } from "sonner";
+import { logAuthEvent } from "@/lib/audit";
 import logoDark from "@/assets/az-s.png.asset.json";
 import logoLight from "@/assets/az-w.png.asset.json";
 
@@ -69,6 +70,7 @@ const AuthLoginPage = () => {
         },
       });
       if (error) throw error;
+      await logAuthEvent({ event: "provider_used", description: "Microsoft Azure OAuth", detail: { provider: "azure" } });
     } catch (err: any) {
       toast.error(err.message || "Azure login failed");
       setAzureLoading(false);
@@ -88,6 +90,7 @@ const AuthLoginPage = () => {
         },
       });
       if (error) throw error;
+      await logAuthEvent({ event: "otp_requested", email, description: "Email one-time code requested" });
       navigate(`/auth/check-email?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
       toast.error(err.message || "Error sending OTP");
@@ -106,6 +109,7 @@ const AuthLoginPage = () => {
         options: { shouldCreateUser: true },
       });
       if (error) throw error;
+      await logAuthEvent({ event: "otp_requested", description: "Phone one-time code requested", detail: { channel: "sms" } });
       navigate(`/auth/verify?phone=${encodeURIComponent(phone)}`);
     } catch (err: any) {
       toast.error(err.message || "Error sending SMS");
@@ -122,6 +126,7 @@ const AuthLoginPage = () => {
         options: { redirectTo: `${window.location.origin}/auth/success` },
       });
       if (error) throw error;
+      await logAuthEvent({ event: "provider_used", description: "Google OAuth", detail: { provider: "google" } });
       // Browser is redirecting to Google — keep the loading state.
     } catch (err: any) {
       toast.error(err.message || "Google login failed");

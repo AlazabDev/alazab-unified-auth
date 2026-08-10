@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
+import { logAuthEvent } from "@/lib/audit";
 import { toast } from "sonner";
 
 const ForgotPasswordPage = () => {
@@ -26,6 +27,7 @@ const ForgotPasswordPage = () => {
         redirectTo: `${window.location.origin}/auth/reset-password`,
       });
       if (error) throw error;
+      await logAuthEvent({ event: "password_reset", email, description: "Password reset link requested" });
       setSent(true);
     } catch (err: any) {
       toast.error(err.message || (ar ? "تعذر إرسال الرابط" : "Could not send link"));

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
+import { logAuthEvent } from "@/lib/audit";
 import { toast } from "sonner";
 
 const ResetPasswordPage = () => {
@@ -52,6 +53,7 @@ const ResetPasswordPage = () => {
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
+      await logAuthEvent({ event: "password_reset", description: "Password updated" });
       toast.success(ar ? "تم تحديث كلمة المرور بنجاح" : "Password updated successfully");
       navigate("/dashboard");
     } catch (err: any) {

@@ -7,6 +7,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupaUser } from "@supabase/supabase-js";
 import { buildHandoffUrl, fetchSsoApps, type SsoApp } from "@/lib/sso";
+import { fetchMyRoles, filterAppsByRole } from "@/lib/rbac";
+import { logAuthEvent } from "@/lib/audit";
+import { ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import logoLight from "@/assets/az-w.png.asset.json";
 
 const DashboardPage = () => {
@@ -30,9 +34,16 @@ const DashboardPage = () => {
       if (!session?.user) navigate("/auth/login");
     });
 
-    fetchSsoApps()
-      .then((list) => setApps(list.filter((a) => a.is_active)))
-      .catch(() => undefined);
+    (async () => {
+      const { data: { user: u } } = await supabase.auth.getUser();
+      if (!u) return;
+      try {
+        const [list, roles] = await Promise.all([fetchSsoApps(), fetchMyRoles(u.id)]);
+        setApps(filterAppsByRole(list, roles));
+      } catch {
+        /* ignore */
+      }
+    })();
 
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -48,6 +59,7 @@ const DashboardPage = () => {
   };
 
   const handleLogout = async () => {
+    await logAuthEvent({ event: "logout", email: user?.email, description: "User signed out" });
     await supabase.auth.signOut();
     navigate("/auth/login");
   };
@@ -65,11 +77,14 @@ const DashboardPage = () => {
     <div className="min-h-screen gradient-hero text-white">
       {/* Header */}
       <header className="border-b border-white/10 px-6 py-4">
-        <div className="container mx-auto flex items-center justify-between">
+        <div className="container mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <img src={logoLight.url} alt="Alazab" className="w-11 h-11 object-contain drop-shadow-md" />
             <span className="font-heading text-lg font-bold">العزب</span>
           </div>
+          <Button variant="ghost" asChild className="text-white/70 hover:text-white hover:bg-white/10 gap-2">
+            <Link to="/auth/security"><ShieldCheck className="w-4 h-4" />الأمان والجلسات</Link>
+          </Button>
           <Button variant="ghost" onClick={handleLogout} className="text-white/70 hover:text-white hover:bg-white/10 gap-2">
             <LogOut className="w-4 h-4" />
             {t("dashboard.logout")}

@@ -173,6 +173,30 @@ export type Database = {
         }
         Relationships: []
       }
+      adp_user_mfa: {
+        Row: {
+          created_at: string
+          email_otp_required: boolean
+          last_verified_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_otp_required?: boolean
+          last_verified_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_otp_required?: boolean
+          last_verified_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       adp_user_roles: {
         Row: {
           created_at: string

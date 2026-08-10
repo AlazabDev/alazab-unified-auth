@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logAuthEvent } from "@/lib/audit";
+import { getMfaPrefs } from "@/lib/mfa";
 
 type AccountType = "company" | "technician" | "client";
 
@@ -31,10 +33,25 @@ const LoginPage = () => {
     if (!email || !password) return;
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      const uid = data.user?.id;
+      // Step-up: Email OTP as the primary second factor
+      const prefs = uid ? await getMfaPrefs(uid) : { email_otp_required: true } as { email_otp_required: boolean };
+      if (prefs.email_otp_required) {
+        await supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: `${window.location.origin}/auth/success` },
+        });
+        await logAuthEvent({ event: "otp_requested", email, description: "2FA step-up code sent after password sign-in" });
+        toast.success(t("otp.check.resent"));
+        navigate(`/auth/verify?email=${encodeURIComponent(email)}&mfa=1`);
+        return;
+      }
+      await logAuthEvent({ event: "login", email, description: "Password sign-in" });
       navigate("/auth/success");
     } catch {
+      await logAuthEvent({ event: "failed_login", status: "failure", email, description: "Invalid credentials" });
       toast.error(t("auth.login.error"));
     } finally {
       setLoading(false);
@@ -49,6 +66,7 @@ const LoginPage = () => {
         options: { redirectTo: `${window.location.origin}/auth/success` },
       });
       if (error) throw error;
+      await logAuthEvent({ event: "provider_used", email, description: "Google OAuth", detail: { provider: "google" } });
     } catch {
       toast.error("Google login failed");
       setGoogleLoading(false);

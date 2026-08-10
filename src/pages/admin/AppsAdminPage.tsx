@@ -30,7 +30,17 @@ const emptyDraft: Draft = {
   is_active: true,
   is_default: false,
   sort_order: 0,
+  allowed_roles: [],
 };
+
+const ALL_ROLES = [
+  { key: "platform_owner", label: "مالك المنصة" },
+  { key: "platform_admin", label: "مدير المنصة" },
+  { key: "database_administrator", label: "مدير قاعدة بيانات" },
+  { key: "data_engineer", label: "مهندس بيانات" },
+  { key: "data_analyst", label: "محلل بيانات" },
+  { key: "read_only", label: "قراءة فقط" },
+];
 
 const AppsAdminPage = () => {
   const [apps, setApps] = useState<SsoApp[]>([]);
@@ -71,6 +81,7 @@ const AppsAdminPage = () => {
       is_active: draft.is_active ?? true,
       is_default: draft.is_default ?? false,
       sort_order: Number(draft.sort_order) || 0,
+      allowed_roles: draft.allowed_roles ?? [],
     };
     const { error } = draft.id
       ? await supabase.from("sso_apps").update(payload).eq("id", draft.id)
@@ -168,6 +179,20 @@ const AppsAdminPage = () => {
                 <ExternalLink className="w-3 h-3 shrink-0" />
                 {app.base_url}
               </a>
+
+              <div className="flex flex-wrap gap-1.5">
+                {(app.allowed_roles ?? []).length === 0 ? (
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                    متاح لكل المستخدمين المصادقين
+                  </span>
+                ) : (
+                  (app.allowed_roles ?? []).map((r) => (
+                    <span key={r} className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-mono" dir="ltr">
+                      {r}
+                    </span>
+                  ))
+                )}
+              </div>
 
               <div className="flex gap-2">
                 <Button
@@ -270,6 +295,39 @@ const AppsAdminPage = () => {
                 onChange={(e) => setDraft({ ...draft, description_ar: e.target.value })}
               />
             </div>
+            <div className="space-y-2 rounded-xl border border-border/60 p-3">
+              <Label>الأدوار المصرح لها (RBAC)</Label>
+              <p className="text-xs text-muted-foreground">
+                إن لم تحدد أي دور، يظهر النظام لكل مستخدم مصادق. عند التحديد لا يظهر ولا يُفتح إلا لأصحاب هذه الأدوار.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {ALL_ROLES.map((r) => {
+                  const active = (draft.allowed_roles ?? []).includes(r.key);
+                  return (
+                    <button
+                      key={r.key}
+                      type="button"
+                      onClick={() =>
+                        setDraft({
+                          ...draft,
+                          allowed_roles: active
+                            ? (draft.allowed_roles ?? []).filter((x) => x !== r.key)
+                            : [...(draft.allowed_roles ?? []), r.key],
+                        })
+                      }
+                      className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                        active
+                          ? "bg-primary/15 text-primary border-primary/40"
+                          : "bg-muted/40 text-muted-foreground border-border/60 hover:text-foreground"
+                      }`}
+                    >
+                      {r.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="flex items-center justify-between rounded-xl border border-border/60 p-3">
               <div>
                 <p className="text-sm font-medium">النظام الافتراضي</p>
