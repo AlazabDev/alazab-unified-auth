@@ -117,6 +117,7 @@ export type Database = {
           ip_address: string | null
           status: string
           user_agent: string | null
+          webhook_event_hash: string | null
         }
         Insert: {
           actor_email?: string | null
@@ -130,6 +131,7 @@ export type Database = {
           ip_address?: string | null
           status?: string
           user_agent?: string | null
+          webhook_event_hash?: string | null
         }
         Update: {
           actor_email?: string | null
@@ -143,6 +145,7 @@ export type Database = {
           ip_address?: string | null
           status?: string
           user_agent?: string | null
+          webhook_event_hash?: string | null
         }
         Relationships: []
       }
