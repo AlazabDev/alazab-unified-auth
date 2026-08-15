@@ -37,6 +37,7 @@ const AdminLayout = () => {
     { to: "/admin/auth", icon: Shield, label: "إعدادات المصادقة" },
     { to: "/admin/apps", icon: Boxes, label: "ربط الأنظمة" },
     { to: "/admin/audit", icon: ScrollText, label: "سجل التدقيق" },
+    { to: "/admin/api", icon: Plug, label: "بوابة API" },
     { to: "/admin/webhooks", icon: Webhook, label: "الهوكات (Webhooks)" },
   ];
 
