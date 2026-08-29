@@ -60,6 +60,7 @@ const App = () => (
                 <Route path="webhooks" element={<WebhooksAdminPage />} />
                 <Route path="apps" element={<AppsAdminPage />} />
                 <Route path="audit" element={<AuditAdminPage />} />
+                <Route path="api" element={<ApiGatewayPage />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
