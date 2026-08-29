@@ -24,6 +24,7 @@ import AuthAdminPage from "./pages/admin/AuthAdminPage.tsx";
 import WebhooksAdminPage from "./pages/admin/WebhooksAdminPage.tsx";
 import AppsAdminPage from "./pages/admin/AppsAdminPage.tsx";
 import AuditAdminPage from "./pages/admin/AuditAdminPage.tsx";
+import ApiGatewayPage from "./pages/admin/ApiGatewayPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
                 <Route path="webhooks" element={<WebhooksAdminPage />} />
                 <Route path="apps" element={<AppsAdminPage />} />
                 <Route path="audit" element={<AuditAdminPage />} />
+                <Route path="api" element={<ApiGatewayPage />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

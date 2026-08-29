@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.1"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -1208,6 +1208,296 @@ export type Database = {
         }
         Relationships: []
       }
+      mail_admins: {
+        Row: {
+          created_at: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mail_agent_connections: {
+        Row: {
+          agent_id: string
+          connection_status: string
+          gateway_instance_id: string | null
+          last_seen_at: string | null
+          last_tool: string | null
+          last_whoami_at: string | null
+          request_count: number
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          connection_status?: string
+          gateway_instance_id?: string | null
+          last_seen_at?: string | null
+          last_tool?: string | null
+          last_whoami_at?: string | null
+          request_count?: number
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          connection_status?: string
+          gateway_instance_id?: string | null
+          last_seen_at?: string | null
+          last_tool?: string | null
+          last_whoami_at?: string | null
+          request_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_agent_connections_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: true
+            referencedRelation: "mail_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mail_agent_connections_gateway_instance_id_fkey"
+            columns: ["gateway_instance_id"]
+            isOneToOne: false
+            referencedRelation: "mail_gateway_instances"
+            referencedColumns: ["instance_id"]
+          },
+        ]
+      }
+      mail_agents: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          foundry_id: string
+          id: string
+          mailbox: string
+          smtp_password_env: string
+          token_hash: string | null
+          token_hint: string | null
+          token_rotated_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          foundry_id: string
+          id: string
+          mailbox: string
+          smtp_password_env: string
+          token_hash?: string | null
+          token_hint?: string | null
+          token_rotated_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          foundry_id?: string
+          id?: string
+          mailbox?: string
+          smtp_password_env?: string
+          token_hash?: string | null
+          token_hint?: string | null
+          token_rotated_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mail_gateway_instances: {
+        Row: {
+          hostname: string
+          instance_id: string
+          last_seen_at: string
+          metadata: Json
+          smtp_host: string
+          smtp_port: number
+          started_at: string
+          status: string
+          template_count: number
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          hostname: string
+          instance_id: string
+          last_seen_at?: string
+          metadata?: Json
+          smtp_host: string
+          smtp_port: number
+          started_at?: string
+          status?: string
+          template_count?: number
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          hostname?: string
+          instance_id?: string
+          last_seen_at?: string
+          metadata?: Json
+          smtp_host?: string
+          smtp_port?: number
+          started_at?: string
+          status?: string
+          template_count?: number
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      mail_send_log: {
+        Row: {
+          agent_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          message_id: string | null
+          recipient: string
+          sender_mailbox: string
+          source: string
+          status: string
+          subject: string
+          template_id: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_id?: string | null
+          recipient: string
+          sender_mailbox: string
+          source: string
+          status: string
+          subject: string
+          template_id?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_id?: string | null
+          recipient?: string
+          sender_mailbox?: string
+          source?: string
+          status?: string
+          subject?: string
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_send_log_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "mail_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mail_send_log_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "mail_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mail_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      mail_templates: {
+        Row: {
+          agent_id: string
+          created_at: string
+          enabled: boolean
+          html: string
+          id: string
+          locale: string
+          metadata: Json
+          name: string
+          optional: Json
+          preheader: string
+          required: Json
+          subject: string
+          system: string
+          text_body: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          enabled?: boolean
+          html: string
+          id: string
+          locale?: string
+          metadata?: Json
+          name: string
+          optional?: Json
+          preheader?: string
+          required?: Json
+          subject: string
+          system: string
+          text_body: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          enabled?: boolean
+          html?: string
+          id?: string
+          locale?: string
+          metadata?: Json
+          name?: string
+          optional?: Json
+          preheader?: string
+          required?: Json
+          subject?: string
+          system?: string
+          text_body?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_templates_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "mail_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_requests: {
         Row: {
           actual_cost: number | null
@@ -1396,6 +1686,75 @@ export type Database = {
           setting_key?: string
           setting_value?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          address: string | null
+          cart_id: string
+          city: string | null
+          country: string | null
+          created_at: string
+          currency: string
+          customer_name: string
+          email: string
+          id: string
+          items: Json
+          notes: string | null
+          payment_result: Json | null
+          phone: string | null
+          postal_code: string | null
+          shipping: number
+          status: string
+          subtotal: number
+          total: number
+          tran_ref: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          cart_id: string
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          currency?: string
+          customer_name: string
+          email: string
+          id?: string
+          items?: Json
+          notes?: string | null
+          payment_result?: Json | null
+          phone?: string | null
+          postal_code?: string | null
+          shipping?: number
+          status?: string
+          subtotal?: number
+          total?: number
+          tran_ref?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          cart_id?: string
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          currency?: string
+          customer_name?: string
+          email?: string
+          id?: string
+          items?: Json
+          notes?: string | null
+          payment_result?: Json | null
+          phone?: string | null
+          postal_code?: string | null
+          shipping?: number
+          status?: string
+          subtotal?: number
+          total?: number
+          tran_ref?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3253,6 +3612,23 @@ export type Database = {
       }
     }
     Views: {
+      mail_agent_stats: {
+        Row: {
+          agent_id: string | null
+          failed_count: number | null
+          last_sent_at: string | null
+          sent_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_send_log_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "mail_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_comments_public: {
         Row: {
           author_name: string | null
@@ -3407,6 +3783,15 @@ export type Database = {
           _user_agent?: string
         }
         Returns: string
+      }
+      mail_touch_agent_connection: {
+        Args: {
+          p_agent_id: string
+          p_gateway_instance_id: string
+          p_tool: string
+          p_whoami?: boolean
+        }
+        Returns: undefined
       }
       next_storage_object_code: { Args: never; Returns: string }
       next_storage_project_code: { Args: never; Returns: string }
