@@ -518,7 +518,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <LanguageContext.Provider value={{ lang, dir, toggleLang, t }}>
-      {children}
+      <DirectionProvider dir={dir}>{children}</DirectionProvider>
     </LanguageContext.Provider>
   );
 };
+
