@@ -3742,6 +3742,27 @@ export type Database = {
       }
     }
     Functions: {
+      admin_list_tables: {
+        Args: never
+        Returns: {
+          columns_count: number
+          policies_count: number
+          rls_enabled: boolean
+          row_estimate: number
+          table_name: string
+          total_size: string
+        }[]
+      }
+      admin_table_columns: {
+        Args: { _table: string }
+        Returns: {
+          column_default: string
+          column_name: string
+          data_type: string
+          is_nullable: boolean
+          is_primary_key: boolean
+        }[]
+      }
       can_manage_storage: { Args: never; Returns: boolean }
       generate_quotation_number: { Args: never; Returns: string }
       get_active_subscriptions: {
