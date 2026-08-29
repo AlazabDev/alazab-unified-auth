@@ -1,6 +1,6 @@
 import { NavLink, Outlet, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Shield, Webhook, LayoutGrid, LogOut, ArrowLeft, ArrowRight, Boxes, ScrollText, Plug } from "lucide-react";
+import { Shield, Webhook, LayoutGrid, LogOut, ArrowLeft, ArrowRight, Boxes, ScrollText, Plug, Database } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
@@ -38,6 +38,7 @@ const AdminLayout = () => {
     { to: "/admin/apps", icon: Boxes, label: "ربط الأنظمة" },
     { to: "/admin/audit", icon: ScrollText, label: "سجل التدقيق" },
     { to: "/admin/api", icon: Plug, label: "بوابة API" },
+    { to: "/admin/database", icon: Database, label: "قاعدة البيانات" },
     { to: "/admin/webhooks", icon: Webhook, label: "الهوكات (Webhooks)" },
   ];
 
