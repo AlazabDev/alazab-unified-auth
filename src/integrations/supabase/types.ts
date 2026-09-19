@@ -80,6 +80,96 @@ export type Database = {
         }
         Relationships: []
       }
+      adp_notifications: {
+        Row: {
+          body: string | null
+          category: string
+          channels: string[]
+          created_at: string
+          email: string | null
+          email_error: string | null
+          email_status: string | null
+          id: string
+          level: string
+          link: string | null
+          read_at: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          channels?: string[]
+          created_at?: string
+          email?: string | null
+          email_error?: string | null
+          email_status?: string | null
+          id?: string
+          level?: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          channels?: string[]
+          created_at?: string
+          email?: string | null
+          email_error?: string | null
+          email_status?: string | null
+          id?: string
+          level?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      adp_portal_tokens: {
+        Row: {
+          app_slug: string
+          expires_at: string
+          id: string
+          ip_address: string | null
+          issued_at: string
+          jti: string
+          refreshed_from: string | null
+          revoked_at: string | null
+          roles: string[]
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          app_slug: string
+          expires_at: string
+          id?: string
+          ip_address?: string | null
+          issued_at?: string
+          jti: string
+          refreshed_from?: string | null
+          revoked_at?: string | null
+          roles?: string[]
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          app_slug?: string
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          issued_at?: string
+          jti?: string
+          refreshed_from?: string | null
+          revoked_at?: string | null
+          roles?: string[]
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       adp_profiles: {
         Row: {
           created_at: string
@@ -4159,7 +4249,29 @@ export type Database = {
           total_size: string
         }[]
       }
+      admin_list_users: {
+        Args: { _limit?: number; _search?: string }
+        Returns: {
+          banned_until: string
+          created_at: string
+          email: string
+          email_confirmed_at: string
+          id: string
+          last_sign_in_at: string
+          mfa_enabled: boolean
+          providers: string[]
+          roles: string[]
+        }[]
+      }
       admin_revoke_auf_share_link: { Args: { p_id: string }; Returns: Json }
+      admin_set_user_role: {
+        Args: {
+          _grant: boolean
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
       admin_table_columns: {
         Args: { _table: string }
         Returns: {
