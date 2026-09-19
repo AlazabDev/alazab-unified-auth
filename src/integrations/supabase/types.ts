@@ -437,6 +437,234 @@ export type Database = {
         }
         Relationships: []
       }
+      auf_maintenance_receipts: {
+        Row: {
+          branch: string
+          created_at: string
+          id: number
+          image_url: string
+          items: Json
+          items_count: number
+          net_total: number
+          receipt_code: string
+          receipt_date: string
+          receipt_number: number
+          receipt_year: number
+          review_data: Json
+          review_notes: string | null
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          share_of_total: number | null
+          source_file: string
+          status: string
+          subtotal: number
+          total_quantity: number
+          updated_at: string
+          vat_14: number
+          withholding_1: number
+        }
+        Insert: {
+          branch: string
+          created_at?: string
+          id?: never
+          image_url: string
+          items?: Json
+          items_count: number
+          net_total?: number
+          receipt_code: string
+          receipt_date: string
+          receipt_number: number
+          receipt_year: number
+          review_data?: Json
+          review_notes?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          share_of_total?: number | null
+          source_file?: string
+          status: string
+          subtotal?: number
+          total_quantity?: number
+          updated_at?: string
+          vat_14?: number
+          withholding_1?: number
+        }
+        Update: {
+          branch?: string
+          created_at?: string
+          id?: never
+          image_url?: string
+          items?: Json
+          items_count?: number
+          net_total?: number
+          receipt_code?: string
+          receipt_date?: string
+          receipt_number?: number
+          receipt_year?: number
+          review_data?: Json
+          review_notes?: string | null
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          share_of_total?: number | null
+          source_file?: string
+          status?: string
+          subtotal?: number
+          total_quantity?: number
+          updated_at?: string
+          vat_14?: number
+          withholding_1?: number
+        }
+        Relationships: []
+      }
+      auf_receipt_item_reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          line_no: number
+          receipt_id: number
+          session_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          id?: string
+          line_no: number
+          receipt_id: number
+          session_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          line_no?: number
+          receipt_id?: number
+          session_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auf_receipt_item_reviews_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "auf_maintenance_receipts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auf_receipt_item_reviews_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "auf_review_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auf_receipt_reviews: {
+        Row: {
+          completed_at: string | null
+          error_comment: string | null
+          id: string
+          receipt_code: string
+          receipt_id: number
+          review_result: string | null
+          session_id: string
+          started_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          error_comment?: string | null
+          id?: string
+          receipt_code: string
+          receipt_id: number
+          review_result?: string | null
+          session_id: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          error_comment?: string | null
+          id?: string
+          receipt_code?: string
+          receipt_id?: number
+          review_result?: string | null
+          session_id?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auf_receipt_reviews_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "auf_maintenance_receipts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auf_receipt_reviews_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "auf_review_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auf_review_sessions: {
+        Row: {
+          completed_at: string | null
+          completed_count: number
+          correct_count: number
+          created_at: string
+          current_receipt_number: number
+          id: string
+          incorrect_count: number
+          last_activity_at: string
+          reviewer_name: string | null
+          session_token: string
+          started_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_count?: number
+          correct_count?: number
+          created_at?: string
+          current_receipt_number?: number
+          id?: string
+          incorrect_count?: number
+          last_activity_at?: string
+          reviewer_name?: string | null
+          session_token: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_count?: number
+          correct_count?: number
+          created_at?: string
+          current_receipt_number?: number
+          id?: string
+          incorrect_count?: number
+          last_activity_at?: string
+          reviewer_name?: string | null
+          session_token?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       auth_providers: {
         Row: {
           client_id: string | null
@@ -2700,6 +2928,133 @@ export type Database = {
         }
         Relationships: []
       }
+      share_access_sessions: {
+        Row: {
+          created_at: string
+          device_id: string
+          expires_at: string
+          id: string
+          last_seen_at: string
+          revoked_at: string | null
+          share_link_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          expires_at: string
+          id?: string
+          last_seen_at?: string
+          revoked_at?: string | null
+          share_link_id: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          expires_at?: string
+          id?: string
+          last_seen_at?: string
+          revoked_at?: string | null
+          share_link_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "share_access_sessions_share_link_id_fkey"
+            columns: ["share_link_id"]
+            isOneToOne: false
+            referencedRelation: "share_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      share_devices: {
+        Row: {
+          device_id: string
+          device_name: string | null
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          revoked_at: string | null
+          share_link_id: string
+        }
+        Insert: {
+          device_id: string
+          device_name?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          revoked_at?: string | null
+          share_link_id: string
+        }
+        Update: {
+          device_id?: string
+          device_name?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          revoked_at?: string | null
+          share_link_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "share_devices_share_link_id_fkey"
+            columns: ["share_link_id"]
+            isOneToOne: false
+            referencedRelation: "share_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      share_links: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          label: string | null
+          last_opened_at: string | null
+          max_devices: number
+          open_count: number
+          permissions: string[]
+          resource: string
+          revoked_at: string | null
+          token_hash: string
+          token_hint: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          last_opened_at?: string | null
+          max_devices?: number
+          open_count?: number
+          permissions?: string[]
+          resource: string
+          revoked_at?: string | null
+          token_hash: string
+          token_hint: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          last_opened_at?: string | null
+          max_devices?: number
+          open_count?: number
+          permissions?: string[]
+          resource?: string
+          revoked_at?: string | null
+          token_hash?: string
+          token_hint?: string
+        }
+        Relationships: []
+      }
       sso_apps: {
         Row: {
           allowed_roles: string[]
@@ -3742,6 +4097,57 @@ export type Database = {
       }
     }
     Functions: {
+      _assert_auf_share_permission: {
+        Args: { p_permission: string; p_session_token: string }
+        Returns: string
+      }
+      _assert_auf_share_session: {
+        Args: { p_session_token: string }
+        Returns: string
+      }
+      _auf_review_bootstrap_core: {
+        Args: { p_reviewer_name?: string; p_session_token: string }
+        Returns: Json
+      }
+      _auf_review_draft_core: {
+        Args: {
+          p_error_comment?: string
+          p_receipt_number: number
+          p_result?: string
+          p_session_token: string
+        }
+        Returns: Json
+      }
+      _auf_review_get_state_core: {
+        Args: { p_session_token: string }
+        Returns: Json
+      }
+      _auf_review_report_core: {
+        Args: { p_session_token: string }
+        Returns: Json
+      }
+      _auf_review_save_core: {
+        Args: {
+          p_error_comment?: string
+          p_receipt_number: number
+          p_result: string
+          p_session_token: string
+        }
+        Returns: Json
+      }
+      _auf_review_touch_core: {
+        Args: { p_receipt_number: number; p_session_token: string }
+        Returns: Json
+      }
+      admin_create_auf_share_link: {
+        Args: {
+          p_expires_days?: number
+          p_label?: string
+          p_max_devices?: number
+        }
+        Returns: Json
+      }
+      admin_list_auf_share_links: { Args: never; Returns: Json }
       admin_list_tables: {
         Args: never
         Returns: {
@@ -3753,6 +4159,7 @@ export type Database = {
           total_size: string
         }[]
       }
+      admin_revoke_auf_share_link: { Args: { p_id: string }; Returns: Json }
       admin_table_columns: {
         Args: { _table: string }
         Returns: {
@@ -3761,6 +4168,65 @@ export type Database = {
           data_type: string
           is_nullable: boolean
           is_primary_key: boolean
+        }[]
+      }
+      auf_review_bootstrap: {
+        Args: { p_reviewer_name?: string; p_session_token: string }
+        Returns: Json
+      }
+      auf_review_draft: {
+        Args: {
+          p_error_comment?: string
+          p_receipt_number: number
+          p_result?: string
+          p_session_token: string
+        }
+        Returns: Json
+      }
+      auf_review_get_item_notes: {
+        Args: { p_receipt_number: number; p_session_token: string }
+        Returns: Json
+      }
+      auf_review_get_state: { Args: { p_session_token: string }; Returns: Json }
+      auf_review_report: { Args: { p_session_token: string }; Returns: Json }
+      auf_review_save: {
+        Args: {
+          p_error_comment?: string
+          p_receipt_number: number
+          p_result: string
+          p_session_token: string
+        }
+        Returns: Json
+      }
+      auf_review_set_item_note: {
+        Args: {
+          p_comment?: string
+          p_line_no: number
+          p_receipt_number: number
+          p_session_token: string
+        }
+        Returns: Json
+      }
+      auf_review_touch: {
+        Args: { p_receipt_number: number; p_session_token: string }
+        Returns: Json
+      }
+      auf_share_get_receipts: {
+        Args: { p_device_id: string; p_session_token: string }
+        Returns: {
+          branch: string
+          id: number
+          items: Json
+          items_count: number
+          net_total: number
+          receipt_code: string
+          receipt_date: string
+          receipt_number: number
+          subtotal: number
+          total_quantity: number
+          total_with_vat: number
+          vat_14: number
+          withholding_1: number
         }[]
       }
       can_manage_storage: { Args: never; Returns: boolean }
@@ -3849,6 +4315,10 @@ export type Database = {
           project_id: string
         }[]
       }
+      redeem_auf_share_link: {
+        Args: { p_device_id: string; p_device_name?: string; p_token: string }
+        Returns: Json
+      }
       register_storage_server_object: {
         Args: {
           _content_class: string
@@ -3868,6 +4338,10 @@ export type Database = {
         }[]
       }
       reserve_storage_object_code: { Args: never; Returns: string }
+      validate_auf_share_session: {
+        Args: { p_device_id?: string; p_session_token: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role:
@@ -3921,12 +4395,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -3950,11 +4424,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -3975,11 +4449,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4000,11 +4474,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -4017,11 +4491,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
